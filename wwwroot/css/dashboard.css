@@ -1,0 +1,167 @@
+﻿/* wwwroot/css/dashboard.css */
+/* Dashboard ko sidebar ke right area me fixed look dena */
+
+.dashboard-root {
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0px 0px;
+    /* YAHAN background image lag rahi hai */
+    background-image: url("/images/brown-woden-plank-wall-background-260nw-1541414270.webp");
+    background-position: center;
+    background-size: cover; /* poori screen cover kare */
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* screenshot jaisa fixed feel */
+
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+/* Scroll disable – jo layout main container hai use scroll nahi karega */
+.dmfs-main-inner {
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Title */
+.dashboard-title {
+    text-align: center;
+    font-size: 26px;
+    font-weight: 600;
+    margin: 0 0 16px;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+}
+
+/* Top row: finance + logistic */
+.dashboard-top-row {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+/* Big cards */
+.db-card {
+    flex: 1;
+    max-width: 420px;
+    padding: 12px 14px 16px;
+    border-radius: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(4px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6);
+}
+
+.db-card-heading {
+    text-align: left;
+    font-size: 18px;
+    margin: 0 0 8px;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+}
+
+/* Rows inside big cards */
+.db-card-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.db-card-row-center {
+    justify-content: center;
+}
+
+/* Small colorful cards */
+.db-mini-card {
+    flex: 1;
+    min-height: 70px;
+    border-radius: 10px;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.6);
+    color: #fff;
+}
+
+/* Colors (approx screenshot) */
+.db-mini-income {
+    background: linear-gradient(135deg, #00b894, #009f7a);
+}
+
+.db-mini-exp {
+    background: linear-gradient(135deg, #e84393, #d63031);
+}
+
+.db-mini-balance {
+    background: linear-gradient(135deg, #fd79a8, #e84393);
+}
+
+.db-mini-cows {
+    background: linear-gradient(135deg, #00cec9, #00b894);
+}
+
+.db-mini-milk {
+    background: linear-gradient(135deg, #0984e3, #2d3436);
+}
+
+.db-mini-employees {
+    background: linear-gradient(135deg, #e17055, #d63031);
+}
+
+/* Text inside mini cards */
+.db-mini-title {
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+.db-mini-value {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* Bottom row cards */
+.dashboard-bottom-row {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: auto;
+    margin-bottom: 10px;
+}
+
+.db-bottom-card {
+    width: 220px;
+    border-radius: 12px;
+    padding: 10px 12px;
+    color: #fff;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.6);
+    text-align: center;
+}
+
+.db-bottom-sale {
+    background: linear-gradient(135deg, #0984e3, #1e3799);
+}
+
+.db-bottom-exp {
+    background: linear-gradient(135deg, #e84118, #c23616);
+}
+
+.db-mini-footer {
+    font-size: 12px;
+    margin-top: 4px;
+    opacity: 0.9;
+}
+
+/* Optional: thoda responsive */
+@media (max-width: 1100px) {
+    .dashboard-top-row {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .db-card {
+        width: 100%;
+        max-width: 480px;
+    }
+}

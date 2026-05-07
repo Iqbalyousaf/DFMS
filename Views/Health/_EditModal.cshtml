@@ -1,0 +1,69 @@
+@model DMFS.Models.HealthPageViewModel
+<div class="modal fade" id="healthEditModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Health Report</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" asp-action="Save" data-pjax-modal>
+          @Html.AntiForgeryToken()
+          <input type="hidden" asp-for="Draft.RepId" />
+          <div class="health-grid">
+            <div class="health-field-row">
+              <label class="health-label">Cow</label>
+              <select class="health-input" asp-for="Draft.CowId">
+                @foreach(var c in Model.Cows) {
+                  if (Model.Draft.CowId == c.CowId) {
+                    <option value="@c.CowId" selected>@c.CowName</option>
+                  } else {
+                    <option value="@c.CowId">@c.CowName</option>
+                  }
+                }
+              </select>
+            </div>
+            <div class="health-field-row">
+              <label class="health-label" asp-for="Draft.RepDate"></label>
+              <input class="health-input" asp-for="Draft.RepDate" type="date" />
+            </div>
+            <div class="health-field-row">
+              <label class="health-label" asp-for="Draft.Event"></label>
+              <input class="health-input" asp-for="Draft.Event" />
+            </div>
+            <div class="health-field-row">
+              <label class="health-label" asp-for="Draft.Diagnosis"></label>
+              <input class="health-input" asp-for="Draft.Diagnosis" />
+            </div>
+            <div class="health-field-row">
+              <label class="health-label" asp-for="Draft.Treatment"></label>
+              <input class="health-input" asp-for="Draft.Treatment" />
+            </div>
+            <div class="health-field-row">
+              <label class="health-label" asp-for="Draft.Cost"></label>
+              <input class="health-input" asp-for="Draft.Cost" type="number" step="0.01" />
+            </div>
+            <div class="health-field-row">
+              <label class="health-label" asp-for="Draft.VetName"></label>
+              <input class="health-input" asp-for="Draft.VetName" />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var sel = document.querySelector('#healthEditModal select[name="Draft.CowId"]');
+  var cows = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Cows.Select(c => new { c.CowId, c.CowName })));
+  function sync(){
+    // nothing more to sync other than cow name if needed
+  }
+  sel?.addEventListener('change', sync);
+})();
+</script>

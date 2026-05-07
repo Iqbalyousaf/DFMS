@@ -1,0 +1,201 @@
+@model DMFS.Models.MilkProductionPageViewModel
+@{
+    ViewData["Title"] = "Daily Milk Production";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+    <div class="milk-root">
+    <h2 class="milk-title">Daily Milk Production</h2>
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <form asp-action="Save" method="post" data-pjax-submit>
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Draft.MId" />
+        <input type="hidden" id="SelectedCowName" name="SelectedCowName" value="" />
+        <input type="hidden" id="SelectedCowEarTag" name="SelectedCowEarTag" value="" />
+        <section class="milk-form-card">
+            <div class="milk-grid">
+                <div class="milk-field-row">
+                    <label class="milk-label" asp-for="Draft.CowId">Cow</label>
+                    <select class="milk-input" asp-for="Draft.CowId" id="milkCowSelect" required>
+                        @foreach (var c in Model.Cows)
+                        {
+                            if (Model.Draft.CowId == c.CowId)
+                            {
+                                <option value="@c.CowId" data-cow-name="@c.CowName" data-cow-tag="@c.EarTag" selected>@c.CowName (@c.EarTag)</option>
+                            }
+                            else
+                            {
+                                <option value="@c.CowId" data-cow-name="@c.CowName" data-cow-tag="@c.EarTag">@c.CowName (@c.EarTag)</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="Draft.CowId" class="text-danger"></span>
+                </div>
+                <div class="milk-field-row">
+                    <label class="milk-label" asp-for="Draft.DateProd"></label>
+                    <input class="milk-input" asp-for="Draft.DateProd" type="date" required />
+                    <span asp-validation-for="Draft.DateProd" class="text-danger"></span>
+                </div>
+                <div class="milk-field-row">
+                    <label class="milk-label" asp-for="Draft.AmMilk"></label>
+                    <input class="milk-input milk-calc" asp-for="Draft.AmMilk" type="number" step="0.1" min="0" required />
+                    <span asp-validation-for="Draft.AmMilk" class="text-danger"></span>
+                </div>
+                <div class="milk-field-row">
+                    <label class="milk-label" asp-for="Draft.NoonMilk"></label>
+                    <input class="milk-input milk-calc" asp-for="Draft.NoonMilk" type="number" step="0.1" min="0" required />
+                    <span asp-validation-for="Draft.NoonMilk" class="text-danger"></span>
+                </div>
+                <div class="milk-field-row">
+                    <label class="milk-label" asp-for="Draft.PmMilk"></label>
+                    <input class="milk-input milk-calc" asp-for="Draft.PmMilk" type="number" step="0.1" min="0" required />
+                    <span asp-validation-for="Draft.PmMilk" class="text-danger"></span>
+                </div>
+                @if (Model.Draft != null && Model.Draft.MId > 0)
+                {
+                    <div class="milk-field-row">
+                        <label class="milk-label">Status</label>
+                        <select class="milk-input" asp-for="Draft.Status">
+                            <option value="Draft">Draft</option>
+                            <option value="Approved">Approved</option>
+                        </select>
+                    </div>
+                }
+                <div class="milk-field-row">
+                    <label class="milk-label">Total Milk</label>
+                    <input class="milk-input" id="milkTotal" type="number" step="0.1" readonly />
+                </div>
+            </div>
+        </section>
+        <div class="milk-actions">
+            <button type="submit" class="milk-btn milk-btn-save">Save</button>
+        </div>
+    </form>
+
+    <form class="milk-filter-row" method="get" asp-action="Index" data-pjax>
+        <label class="milk-filter-label">Filter</label>
+        <select class="milk-input" name="filterCowId">
+            <option value="">All Cows</option>
+            @foreach (var c in Model.Cows)
+            {
+                if (Model.FilterCowId == c.CowId)
+                {
+                    <option value="@c.CowId" selected>@c.CowName</option>
+                }
+                else
+                {
+                    <option value="@c.CowId">@c.CowName</option>
+                }
+            }
+        </select>
+        <input class="milk-input" type="date" name="filterDate" value="@(Model.FilterDate?.ToString("yyyy-MM-dd"))" />
+        @* <input class="milk-input milk-filter-input" type="text" name="search" placeholder="Search cow..." value="@Model.Search" id="milkFilter" /> *@
+        <button type="submit" class="milk-btn milk-btn-save">Apply</button>
+        <h3 class="milk-subtitle">Production Data</h3>
+    </form>
+
+    <div class="milk-table-wrap">
+        <table class="milk-table" id="milkTable">
+            <thead>
+                <tr>
+                    <th>MId</th>
+                    <th>CowId</th>
+                    <th>CowName</th>
+                    <th>DateProd</th>
+                    <th>AmMilk</th>
+                    <th>NoonMilk</th>
+                    <th>PmMilk</th>
+                    <th>TotalMilk</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Productions != null && Model.Productions.Any())
+                {
+                    foreach (var item in Model.Productions)
+                    {
+                        <tr>
+                            <td>@item.MId</td>
+                            <td>@item.CowId</td>
+                            <td>@item.CowName</td>
+                            <td>@item.DateProd.ToString("yyyy-MM-dd")</td>
+                            <td>@item.AmMilk</td>
+                            <td>@item.NoonMilk</td>
+                            <td>@item.PmMilk</td>
+                            <td>@item.TotalMilk</td>
+                            <td>@item.Status</td>
+                            <td>
+                                @if ((item.Status ?? "").ToLower() == "approved")
+                                {
+                                    <span class="text-muted">Locked</span>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn btn-link p-0" data-edit-mid="@item.MId">Edit</button>
+                                    <form asp-action="Delete" method="post" class="d-inline" data-pjax-submit data-confirm="Delete this milk production record?">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@item.MId" />
+                                        <button type="submit" class="btn btn-link p-0 text-danger">Delete</button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="10">No milk production records found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        (function () {
+            function parseValue(v) {
+                var n = parseFloat(v);
+                return Number.isFinite(n) ? n : 0;
+            }
+
+            function calculateTotal() {
+                var am = parseValue(document.getElementById('Draft_AmMilk')?.value);
+                var noon = parseValue(document.getElementById('Draft_NoonMilk')?.value);
+                var pm = parseValue(document.getElementById('Draft_PmMilk')?.value);
+                var totalEl = document.getElementById('milkTotal');
+                if (totalEl) totalEl.value = (am + noon + pm).toFixed(1);
+            }
+
+            function syncSelectedCowMetadata() {
+                var select = document.getElementById('milkCowSelect');
+                var hiddenName = document.getElementById('SelectedCowName');
+                var hiddenTag = document.getElementById('SelectedCowEarTag');
+                if (!select || !hiddenName || !hiddenTag) return;
+                var opt = select.options[select.selectedIndex];
+                hiddenName.value = opt ? (opt.getAttribute('data-cow-name') || '') : '';
+                hiddenTag.value = opt ? (opt.getAttribute('data-cow-tag') || '') : '';
+            }
+
+            document.querySelectorAll('.milk-calc').forEach(function (el) {
+                el.addEventListener('input', calculateTotal);
+            });
+            document.getElementById('milkCowSelect')?.addEventListener('change', syncSelectedCowMetadata);
+            calculateTotal();
+            syncSelectedCowMetadata();
+
+            // Clear button removed: no client-side clear handling needed.
+        })();
+    </script>
+}

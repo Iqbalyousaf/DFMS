@@ -1,0 +1,105 @@
+@model DMFS.Models.Cow
+@{
+  var cow = Model ?? new DMFS.Models.Cow();
+}
+<div class="modal fade" id="cowEditModal" tabindex="-1" aria-labelledby="cowEditModalLabel" aria-hidden="true" data-isactive="@(cow.IsActive.ToString().ToLower())">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-dark" id="cowEditModalLabel">Edit Cow @(!string.IsNullOrWhiteSpace(cow.CowName) ? (" - " + cow.CowName) : String.Empty)</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="/Cows/SaveCow" data-pjax-modal novalidate>
+          @Html.AntiForgeryToken()
+          <input type="hidden" name="Draft.CowId" value="@cow.CowId" />
+
+          <div class="mb-2">
+            <label class="form-label text-dark">Cow ID</label>
+            <input type="text" class="form-control" value="@cow.CowId" readonly />
+          </div>
+
+          <h6 class="mb-2 text-dark">Basic Information</h6>
+          <div class="row mb-2">
+            <div class="col-md-6">
+              <label class="form-label text-dark">Cow Name</label>
+              <input name="Draft.CowName" class="form-control" value="@cow.CowName" required />
+              <span class="text-danger">@ViewData.ModelState["Draft.CowName"]?.Errors.FirstOrDefault()?.ErrorMessage</span>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label text-dark">Ear Tag</label>
+              <input name="Draft.EarTag" class="form-control" value="@cow.EarTag" required />
+              <span class="text-danger">@ViewData.ModelState["Draft.EarTag"]?.Errors.FirstOrDefault()?.ErrorMessage</span>
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-md-4">
+              <label class="form-label text-dark">Color</label>
+              <input name="Draft.Color" class="form-control" value="@cow.Color" required />
+              <span class="text-danger">@ViewData.ModelState["Draft.Color"]?.Errors.FirstOrDefault()?.ErrorMessage</span>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label text-dark">Breed</label>
+              <input name="Draft.Breed" class="form-control" value="@cow.Breed" required />
+              <span class="text-danger">@ViewData.ModelState["Draft.Breed"]?.Errors.FirstOrDefault()?.ErrorMessage</span>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label text-dark">Age</label>
+              <input type="number" name="Draft.Age" class="form-control" value="@cow.Age" min="1" max="100" />
+              <span class="text-danger">@ViewData.ModelState["Draft.Age"]?.Errors.FirstOrDefault()?.ErrorMessage</span>
+            </div>
+          </div>
+
+          <h6 class="mb-2 text-dark">Measurements</h6>
+          <div class="row mb-2">
+            <div class="col-md-6">
+              <label class="form-label text-dark">Date of Birth</label>
+              <input type="date" name="Draft.DateOfBirth" class="form-control" value="@(cow.DateOfBirth?.ToString("yyyy-MM-dd"))" />
+              <span class="text-danger">@ViewData.ModelState["Draft.DateOfBirth"]?.Errors.FirstOrDefault()?.ErrorMessage</span>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label text-dark">Weight at Birth</label>
+              <input type="number" step="any" name="Draft.WeightAtBirth" class="form-control" value="@cow.WeightAtBirth" min="0" />
+              <span class="text-danger">@ViewData.ModelState["Draft.WeightAtBirth"]?.Errors.FirstOrDefault()?.ErrorMessage</span>
+            </div>
+          </div>
+
+          <h6 class="mb-2 text-dark">Other</h6>
+          <div class="row mb-2">
+            <div class="col-md-6">
+              <label class="form-label text-dark">Pasture</label>
+              <input name="Draft.Pasture" class="form-control" value="@cow.Pasture" required />
+              <span class="text-danger">@ViewData.ModelState["Draft.Pasture"]?.Errors.FirstOrDefault()?.ErrorMessage</span>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label text-dark">Status</label>
+              <select name="Draft.IsActive" class="form-control" id="modalCowStatusSelect">
+                <option value="true" selected="@(cow.IsActive ? "selected" : null)">Active</option>
+                <option value="false" selected="@(cow.IsActive ? null : "selected")">Inactive</option>
+              </select>
+              <span class="text-danger">@ViewData.ModelState["Draft.IsActive"]?.Errors.FirstOrDefault()?.ErrorMessage</span>
+            </div>
+          </div>
+
+          <div class="mb-2" id="modalInactiveReasonRow" style="display:@(cow.IsActive ? "none" : "block")">
+            <label class="form-label text-dark">Inactive Reason</label>
+            <input name="Draft.InactiveReason" class="form-control" value="@cow.InactiveReason" />
+            <span class="text-danger">@ViewData.ModelState["Draft.InactiveReason"]?.Errors.FirstOrDefault()?.ErrorMessage</span>
+          </div>
+
+          <div class="mb-2" id="modalInactiveDateRow" style="display:@(cow.IsActive ? "none" : "block")">
+            <label class="form-label text-dark">Inactive Date</label>
+            <input type="date" name="Draft.InactiveDate" class="form-control" value="@(cow.InactiveDate?.ToString("yyyy-MM-dd"))" />
+            <span class="text-danger">@ViewData.ModelState["Draft.InactiveDate"]?.Errors.FirstOrDefault()?.ErrorMessage</span>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

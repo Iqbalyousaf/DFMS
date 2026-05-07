@@ -1,0 +1,146 @@
+@model DMFS.Models.BreedPageViewModel
+@{
+    ViewData["Title"] = "Cow Breeding";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="breed-root">
+    <h2 class="breed-title">Cow Breeding</h2>
+
+    <form asp-action="Save" method="post" data-pjax-submit>
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Draft.Brid" />
+        <section class="breed-form-card">
+            <div class="breed-grid">
+                <div class="breed-field-row">
+                    <label class="breed-label" asp-for="Draft.HeatDate"></label>
+                    <input class="breed-input" asp-for="Draft.HeatDate" type="date" />
+                </div>
+                <div class="breed-field-row">
+                    <label class="breed-label" asp-for="Draft.BreedDate"></label>
+                    <input class="breed-input" asp-for="Draft.BreedDate" type="date" />
+                </div>
+                <div class="breed-field-row">
+                    <label class="breed-label" asp-for="Draft.CowId">Cow</label>
+                    <select class="breed-input" asp-for="Draft.CowId" id="breedCowSelect" required>
+                        @foreach(var c in Model.Cows) {
+                            if (Model.Draft.CowId == c.CowId) {
+                                <option value="@c.CowId" data-cow-name="@c.CowName" selected>@c.CowName</option>
+                            } else {
+                                <option value="@c.CowId" data-cow-name="@c.CowName">@c.CowName</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="breed-field-row">
+                    <label class="breed-label" asp-for="Draft.CowName"></label>
+                    <input class="breed-input" asp-for="Draft.CowName" readonly />
+                </div>
+                <div class="breed-field-row">
+                    <label class="breed-label" asp-for="Draft.PregDate"></label>
+                    <input class="breed-input" asp-for="Draft.PregDate" type="date" />
+                </div>
+                <div class="breed-field-row">
+                    <label class="breed-label" asp-for="Draft.ExpDate"></label>
+                    <input class="breed-input" asp-for="Draft.ExpDate" type="date" />
+                </div>
+                <div class="breed-field-row">
+                    <label class="breed-label" asp-for="Draft.DateCalved"></label>
+                    <input class="breed-input" asp-for="Draft.DateCalved" type="date" />
+                </div>
+                <div class="breed-field-row">
+                    <label class="breed-label" asp-for="Draft.CowAge"></label>
+                    <input class="breed-input" asp-for="Draft.CowAge" type="number" min="0" />
+                </div>
+                <div class="breed-field-row">
+                    <label class="breed-label" asp-for="Draft.Remarks"></label>
+                    <input class="breed-input" asp-for="Draft.Remarks" />
+                </div>
+            </div>
+        </section>
+        <div class="breed-actions">
+            <button type="submit" class="breed-btn breed-btn-save">Save</button>
+        </div>
+    </form>
+
+    <div class="breed-filter-row">
+        <label class="breed-filter-label">Filter</label>
+        <input class="breed-input breed-filter-input" type="text" placeholder="Type remarks..." id="breedFilter" />
+    </div>
+
+    <h3 class="breed-subtitle">Breed Reports</h3>
+
+    <div class="breed-table-wrap">
+        <table class="breed-table" id="breedTable">
+            <thead>
+                <tr>
+                    <th>Brid</th>
+                    <th>HeatDate</th>
+                    <th>BreedDate</th>
+                    <th>CowId</th>
+                    <th>Cow</th>
+                    <th>PregDate</th>
+                    <th>ExpDate</th>
+                    <th>DateCalved</th>
+                    <th>CowAge</th>
+                    <th>Remarks</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Reports != null && Model.Reports.Any())
+                {
+                    foreach (var item in Model.Reports)
+                    {
+                        <tr>
+                            <td>@item.Brid</td>
+                            <td>@item.HeatDate.ToString("yyyy-MM-dd")</td>
+                            <td>@item.BreedDate.ToString("yyyy-MM-dd")</td>
+                            <td>@item.CowId</td>
+                            <td>@item.CowName</td>
+                            <td>@item.PregDate.ToString("yyyy-MM-dd")</td>
+                            <td>@item.ExpDate.ToString("yyyy-MM-dd")</td>
+                            <td>@item.DateCalved.ToString("yyyy-MM-dd")</td>
+                            <td>@item.CowAge</td>
+                            <td>@item.Remarks</td>
+                            <td>
+                                <a asp-action="Index" asp-route-id="@item.Brid">Edit</a>
+                                <form asp-action="Delete" method="post" class="d-inline" onsubmit="return confirm('Delete?');">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@item.Brid" />
+                                    <button type="submit" class="btn btn-link p-0 text-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="11">No records.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        (function () {
+            var sel = document.querySelector('#breedCowSelect') || document.querySelector('[name="Draft.CowId"]');
+            var cows = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Cows.Select(c => new { c.CowId, c.CowName })));
+            function syncName() {
+                var id = parseInt(sel.value, 10);
+                var c = cows.find(function (x) { return x.CowId === id; });
+                var nameInput = document.querySelector('[name="Draft.CowName"]');
+                if (c && nameInput) nameInput.value = c.CowName;
+            }
+            sel?.addEventListener('change', syncName);
+            syncName();
+        })();
+        document.getElementById('breedFilter')?.addEventListener('input', function () {
+            const q = this.value.toLowerCase();
+            document.querySelectorAll('#breedTable tbody tr').forEach(function (row) {
+                row.style.display = row.innerText.toLowerCase().includes(q) ? '' : 'none';
+            });
+        });
+    </script>
+}

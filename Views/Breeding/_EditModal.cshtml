@@ -1,0 +1,85 @@
+@model DMFS.Models.BreedPageViewModel
+<div class="modal fade" id="breedEditModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Breed Report</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" asp-action="Save" data-pjax-modal>
+          @Html.AntiForgeryToken()
+          <input type="hidden" asp-for="Draft.Brid" />
+          <div class="breed-grid">
+            <div class="breed-field-row">
+              <label class="breed-label" asp-for="Draft.HeatDate"></label>
+              <input class="breed-input" asp-for="Draft.HeatDate" type="date" />
+            </div>
+            <div class="breed-field-row">
+              <label class="breed-label" asp-for="Draft.BreedDate"></label>
+              <input class="breed-input" asp-for="Draft.BreedDate" type="date" />
+            </div>
+            <div class="breed-field-row">
+              <label class="breed-label">Cow</label>
+              <select class="breed-input" asp-for="Draft.CowId">
+                @foreach (var c in Model.Cows)
+                {
+                  if (Model.Draft.CowId == c.CowId)
+                  {
+                    <option value="@c.CowId" selected>@c.CowName</option>
+                  }
+                  else
+                  {
+                    <option value="@c.CowId">@c.CowName</option>
+                  }
+                }
+              </select>
+            </div>
+            <div class="breed-field-row">
+              <label class="breed-label" asp-for="Draft.CowName"></label>
+              <input class="breed-input" asp-for="Draft.CowName" readonly />
+            </div>
+            <div class="breed-field-row">
+              <label class="breed-label" asp-for="Draft.PregDate"></label>
+              <input class="breed-input" asp-for="Draft.PregDate" type="date" />
+            </div>
+            <div class="breed-field-row">
+              <label class="breed-label" asp-for="Draft.ExpDate"></label>
+              <input class="breed-input" asp-for="Draft.ExpDate" type="date" />
+            </div>
+            <div class="breed-field-row">
+              <label class="breed-label" asp-for="Draft.DateCalved"></label>
+              <input class="breed-input" asp-for="Draft.DateCalved" type="date" />
+            </div>
+            <div class="breed-field-row">
+              <label class="breed-label" asp-for="Draft.CowAge"></label>
+              <input class="breed-input" asp-for="Draft.CowAge" type="number" min="0" />
+            </div>
+            <div class="breed-field-row">
+              <label class="breed-label" asp-for="Draft.Remarks"></label>
+              <input class="breed-input" asp-for="Draft.Remarks" />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var sel = document.querySelector('#breedEditModal select[name="Draft.CowId"]');
+  var cows = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Cows.Select(c => new { c.CowId, c.CowName })));
+  function sync(){
+    var id = parseInt(sel.value,10);
+    var cow = cows.find(x=>x.CowId===id);
+    var ni = document.querySelector('#breedEditModal input[name="Draft.CowName"]');
+    if(cow && ni) ni.value = cow.CowName;
+  }
+  sel?.addEventListener('change', sync);
+  sync();
+})();
+</script>

@@ -1,0 +1,38 @@
+@model List<DMFS.Models.ExpenditureEntry>
+@{
+    var empId = ViewBag.EmployeeId as int? ?? 0;
+}
+<div class="finance-table-wrap">
+    <table class="finance-table">
+        <thead>
+            <tr>
+                <th>ExpId</th>
+                <th>ExpDate</th>
+                <th>ExpPurpose</th>
+                <th>ExpAmount</th>
+                <th>EmpId</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ExpId</td>
+                    <td>@item.ExpDate.ToString("yyyy-MM-dd")</td>
+                    <td>@item.ExpPurpose</td>
+                    <td>@item.ExpAmount</td>
+                    <td>@item.EmpId</td>
+                    <td>
+                        <form asp-action="DeleteExpenditure" method="post" class="d-inline ajax-delete-exp">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@item.ExpId" />
+                            <input type="hidden" name="empId" value="@empId" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

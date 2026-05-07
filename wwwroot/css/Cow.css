@@ -1,0 +1,156 @@
+﻿/* wwwroot/css/cows.css */
+/* Sirf front-end look, screenshot ke close */
+
+.dmfs-main-inner {
+    padding: 0;
+}
+
+.cows-root {
+    height: 100%;
+    min-height: 100vh;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 20px;
+    background-color: #1e2a1f;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url("/images/cows-manage-bg.jpg"); /* apna image path */
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+
+/* title */
+.cows-title {
+    text-align: center;
+    font-size: 24px;
+    margin: 0 0 12px;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+/* top panels */
+.cows-panels {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.cows-panel {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(4px);
+}
+
+.cows-field-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    gap: 10px;
+}
+
+.cows-label {
+    min-width: 110px;
+    font-size: 13px;
+}
+
+.cows-input {
+    flex: 1;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    background: rgba(0, 0, 0, 0.25);
+    color: #fff;
+    font-size: 13px;
+}
+
+.cows-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* buttons */
+.cows-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin: 12px 0 16px;
+}
+
+.cows-btn {
+    min-width: 90px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+    outline: none;
+}
+
+.cows-btn-save {
+    background: linear-gradient(135deg, #00b894, #009f7a);
+}
+
+.cows-btn-edit {
+    background: linear-gradient(135deg, #e1a32b, #d35400);
+}
+
+.cows-btn-delete {
+    background: linear-gradient(135deg, #e84393, #c0392b);
+}
+
+.cows-btn-clear {
+    background: linear-gradient(135deg, #bdc3c7, #7f8c8d);
+}
+
+/* filter + list title */
+.cows-filter-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.cows-filter-input {
+    max-width: 260px;
+}
+
+.cows-list-title {
+    text-align: center;
+    margin: 4px 0 6px;
+    color: #ff90c0;
+    font-weight: 600;
+}
+
+/* table */
+.cows-table-wrapper {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    padding: 8px;
+    overflow: auto; /* sirf table ke andar scroll ho sakta, poora page nahi */
+}
+
+.cows-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.cows-table thead {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.cows-table th,
+.cows-table td {
+    padding: 4px 6px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: left;
+}
+
+.cows-table tbody tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.06);
+}

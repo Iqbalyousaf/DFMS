@@ -1,0 +1,172 @@
+@model DMFS.Models.CowManageViewModel
+@{
+    ViewData["Title"] = "Manage Cows";
+}
+
+<link rel="stylesheet" href="~/css/Cow.css" />
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-warning m-3">@TempData["Error"]</div>
+}
+
+<div class="cows-root">
+    <h2 class="cows-title">Manage Cows</h2>
+
+    <form asp-controller="Cows" asp-action="SaveCow" method="post" data-pjax-submit>
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Draft.CowId" />
+        <div class="cows-panels">
+            <section class="cows-panel">
+                <div class="cows-field-row">
+                    <label class="cows-label" asp-for="Draft.CowName"></label>
+                    <input class="cows-input" asp-for="Draft.CowName" required />
+                    <span asp-validation-for="Draft.CowName" class="text-danger"></span>
+                </div>
+                <div class="cows-field-row">
+                    <label class="cows-label" asp-for="Draft.EarTag"></label>
+                    <input class="cows-input" asp-for="Draft.EarTag" required />
+                    <span asp-validation-for="Draft.EarTag" class="text-danger"></span>
+                </div>
+                <div class="cows-field-row">
+                    <label class="cows-label" asp-for="Draft.DateOfBirth"></label>
+                    <input class="cows-input" asp-for="Draft.DateOfBirth" type="date" required />
+                    <span asp-validation-for="Draft.DateOfBirth" class="text-danger"></span>
+                </div>
+                <div class="cows-field-row">
+                    <label class="cows-label" asp-for="Draft.Age"></label>
+                    <input class="cows-input" asp-for="Draft.Age" type="number" min="0" max="100" />
+                    <span asp-validation-for="Draft.Age" class="text-danger"></span>
+                </div>
+            </section>
+            <section class="cows-panel">
+                <div class="cows-field-row">
+                    <label class="cows-label" asp-for="Draft.Color"></label>
+                    <input class="cows-input" asp-for="Draft.Color" required />
+                    <span asp-validation-for="Draft.Color" class="text-danger"></span>
+                </div>
+                <div class="cows-field-row">
+                    <label class="cows-label">Status</label>
+                    <select class="cows-input" id="cowStatusSelect" asp-for="Draft.IsActive">
+                        <option value="true" selected="@(Model.Draft.IsActive ? "selected" : null)">Active</option>
+                        <option value="false" selected="@(Model.Draft.IsActive ? null : "selected")">Inactive</option>
+                    </select>
+                    <span asp-validation-for="Draft.IsActive" class="text-danger"></span>
+                </div>
+                <div class="cows-field-row" id="inactiveReasonRow" style="display:@(Model.Draft.IsActive ? "none" : "block")">
+                    <label class="cows-label" asp-for="Draft.InactiveReason"></label>
+                    <input class="cows-input" asp-for="Draft.InactiveReason" />
+                    <span asp-validation-for="Draft.InactiveReason" class="text-danger"></span>
+                </div>
+                <div class="cows-field-row" id="inactiveDateRow" style="display:@(Model.Draft.IsActive ? "none" : "block")">
+                    <label class="cows-label" asp-for="Draft.InactiveDate"></label>
+                    <input class="cows-input" asp-for="Draft.InactiveDate" type="date" />
+                    <span asp-validation-for="Draft.InactiveDate" class="text-danger"></span>
+                </div>
+                <div class="cows-field-row">
+                    <label class="cows-label" asp-for="Draft.Breed"></label>
+                    <input class="cows-input" asp-for="Draft.Breed" />
+                    <span asp-validation-for="Draft.Breed" class="text-danger"></span>
+                </div>
+                <div class="cows-field-row">
+                    <label class="cows-label" asp-for="Draft.WeightAtBirth"></label>
+                    <input class="cows-input" asp-for="Draft.WeightAtBirth" type="number" step="any" min="0" />
+                    <span asp-validation-for="Draft.WeightAtBirth" class="text-danger"></span>
+                </div>
+                <div class="cows-field-row">
+                    <label class="cows-label" asp-for="Draft.Pasture"></label>
+                    <input class="cows-input" asp-for="Draft.Pasture" required />
+                    <span asp-validation-for="Draft.Pasture" class="text-danger"></span>
+                </div>
+            </section>
+        </div>
+        <div class="cows-actions">
+            <button type="submit" class="cows-btn cows-btn-save">Save</button>
+            <a class="cows-btn cows-btn-clear" asp-action="Manage" data-pjax>Clear</a>
+        </div>
+    </form>
+
+    <div class="cows-filter-row">
+        <label class="cows-label">Filter</label>
+        <input class="cows-input cows-filter-input" type="text" placeholder="Type to filter..." id="cowFilter" />
+        <div class="cows-filter-status ms-3">
+            <label class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="filterActive" checked />
+                <span class="form-check-label">Active</span>
+            </label>
+            <label class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="filterInactive" />
+                <span class="form-check-label">Inactive</span>
+            </label>
+        </div>
+    </div>
+
+    <h3 class="cows-list-title">Cows List</h3>
+
+    <div class="cows-table-wrapper">
+        <table class="cows-table" id="cowsTable">
+            <thead>
+                <tr>
+                    <th>CowId</th>
+                    <th>CowName</th>
+                    <th>EarTag</th>
+                    <th>Color</th>
+                    <th>DateOfBirth</th>
+                    <th id="thInactiveDate">InactiveDate</th>
+                    <th>Breed</th>
+                    <th>Age</th>
+                    <th>WeightAtBir</th>
+                    <th>Pasture</th>
+                <th>Status</th>
+                <th id="thReason">Reason</th>
+                <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Cows != null && Model.Cows.Any())
+                {
+                    foreach (var cow in Model.Cows)
+                    {
+                        <tr data-status="@(cow.IsActive ? "active" : "inactive")">
+                            <td class="td-row-index"></td>
+                            <td>@cow.CowName</td>
+                            <td>@cow.EarTag</td>
+                            <td>@cow.Color</td>
+                            <td>@(cow.DateOfBirth?.ToString("yyyy-MM-dd") ?? "")</td>
+                            <td class="td-inactive-date">@(!cow.IsActive ? (cow.InactiveDate?.ToString("yyyy-MM-dd") ?? "") : "")</td>
+                            <td>@cow.Breed</td>
+                            <td>@cow.Age</td>
+                            <td>@cow.WeightAtBirth</td>
+                            <td>@cow.Pasture</td>
+                            <td>@(cow.IsActive ? "Active" : "Inactive")</td>
+                            <td class="td-reason">
+                                @if (!cow.IsActive)
+                                {
+                                    @((string.IsNullOrWhiteSpace(cow.InactiveReason) ? "" : cow.InactiveReason))
+                                }
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-primary ms-1" data-edit-id="@cow.CowId">Edit</button>
+                                <form asp-action="DeleteCow" method="post" class="d-inline" data-pjax-submit data-confirm="Delete this cow?">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@cow.CowId" />
+                                    <button type="submit" class="btn btn-link p-0 text-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="13">No cows found in the database.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

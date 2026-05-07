@@ -1,0 +1,96 @@
+@model DMFS.Models.MilkSalesPageViewModel
+@{
+    ViewData["Title"] = "Milk Sales";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="sales-root">
+    <h2 class="sales-title">Milk Sales</h2>
+
+    <form asp-action="Save" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Draft.SId" />
+        <section class="sales-form-card">
+            <div class="sales-grid">
+                <div class="sales-field-row">
+                    <label class="sales-label" asp-for="Draft.EmpId">Employee</label>
+                    <select class="sales-input" asp-for="Draft.EmpId" asp-items="@(new SelectList(Model.Employees, "EmpId", "EmpName"))"></select>
+                </div>
+                <div class="sales-field-row">
+                    <label class="sales-label" asp-for="Draft.Date"></label>
+                    <input class="sales-input" asp-for="Draft.Date" type="date" />
+                </div>
+                <div class="sales-field-row">
+                    <label class="sales-label" asp-for="Draft.Uprice"></label>
+                    <input class="sales-input" asp-for="Draft.Uprice" type="number" step="0.01" min="0" />
+                </div>
+                <div class="sales-field-row">
+                    <label class="sales-label" asp-for="Draft.ClientName"></label>
+                    <input class="sales-input" asp-for="Draft.ClientName" />
+                </div>
+                <div class="sales-field-row">
+                    <label class="sales-label" asp-for="Draft.ClientPhone"></label>
+                    <input class="sales-input" asp-for="Draft.ClientPhone" />
+                </div>
+                <div class="sales-field-row">
+                    <label class="sales-label" asp-for="Draft.Quantity"></label>
+                    <input class="sales-input" asp-for="Draft.Quantity" type="number" step="0.01" min="0" />
+                </div>
+            </div>
+        </section>
+        <div class="sales-actions">
+            <button type="submit" class="sales-btn sales-btn-save">Save</button>
+            <a class="sales-btn sales-btn-clear" asp-action="Index">Clear</a>
+        </div>
+    </form>
+
+    <h3 class="sales-subtitle">Sales Report</h3>
+
+    <div class="sales-table-wrap">
+        <table class="sales-table">
+            <thead>
+                <tr>
+                    <th>SId</th>
+                    <th>Date</th>
+                    <th>Uprice</th>
+                    <th>ClientName</th>
+                    <th>ClientPhone</th>
+                    <th>EmpId</th>
+                    <th>Quantity</th>
+                    <th>Amount</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Sales != null && Model.Sales.Any())
+                {
+                    foreach (var item in Model.Sales)
+                    {
+                        <tr>
+                            <td>@item.SId</td>
+                            <td>@item.Date.ToString("yyyy-MM-dd")</td>
+                            <td>@item.Uprice</td>
+                            <td>@item.ClientName</td>
+                            <td>@item.ClientPhone</td>
+                            <td>@item.EmpId</td>
+                            <td>@item.Quantity</td>
+                            <td>@item.Amount</td>
+                            <td>
+                                <a asp-action="Index" asp-route-id="@item.SId">Edit</a>
+                                <form asp-action="Delete" method="post" class="d-inline" onsubmit="return confirm('Delete?');">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@item.SId" />
+                                    <button type="submit" class="btn btn-link p-0 text-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="9">No sales.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,88 @@
+@model DMFS.Models.FinanceDashboardModel
+@{
+    ViewData["Title"] = "Farm Finances";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var empId = Model.FilterEmployeeId ?? Model.Employees.FirstOrDefault()?.EmpId ?? 0;
+}
+
+<div class="finance-root">
+    <div class="finance-header-row">
+        <h2 class="finance-title">Farm Finances</h2>
+        <form method="get" asp-action="Index" class="finance-emp-box">
+            <label>Employee</label>
+            <select class="finance-input" name="employeeId" onchange="this.form.submit()">
+                @foreach (var e in Model.Employees)
+                {
+                    if (e.EmpId == empId)
+                    {
+                        <option value="@e.EmpId" selected>@e.EmpName (@e.EmpId)</option>
+                    }
+                    else
+                    {
+                        <option value="@e.EmpId">@e.EmpName (@e.EmpId)</option>
+                    }
+                }
+            </select>
+        </form>
+    </div>
+
+    @if (Model.Employees.Count == 0)
+    {
+        <p class="p-3">Pehle <a asp-controller="Employees" asp-action="Index">Employees</a> me record add karen.</p>
+    }
+    else
+    {
+
+    <div class="finance-grid">
+        <section class="finance-card finance-side-card">
+            <h3 class="finance-card-title">Expenditures</h3>
+            <form asp-action="AddExpenditure" method="post" class="finance-form-stack">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="EmpId" value="@empId" />
+                <label>Date</label>
+                <input class="finance-input" name="ExpDate" type="date" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                <label>Purpose</label>
+                <input class="finance-input" name="ExpPurpose" placeholder="Purpose" required />
+                <label>Amount</label>
+                <input class="finance-input" name="ExpAmount" type="number" step="0.01" min="0" required />
+                <button type="submit" class="finance-btn finance-btn-save">Save</button>
+            </form>
+        </section>
+
+        <section class="finance-card finance-main-card">
+            <div class="finance-list-head">
+                <h3 class="finance-card-title">Expenditure List</h3>
+            </div>
+
+            <div id="expenditures-container">
+                @await Html.PartialAsync("_ExpendituresPartial", Model.Expenditures, new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData) { ["EmployeeId"] = empId })
+            </div>
+        </section>
+
+        <section class="finance-card finance-side-card">
+            <h3 class="finance-card-title">Incomes</h3>
+            <form asp-action="AddIncome" method="post" class="finance-form-stack">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="EmpId" value="@empId" />
+                <label>Income Date</label>
+                <input class="finance-input" name="IncDate" type="date" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                <label>Type</label>
+                <input class="finance-input" name="IncPurpose" placeholder="Sales / Services" required />
+                <label>Amount</label>
+                <input class="finance-input" name="IncAmt" type="number" step="0.01" min="0" required />
+                <button type="submit" class="finance-btn finance-btn-save">Save</button>
+            </form>
+        </section>
+
+        <section class="finance-card finance-main-card">
+            <div class="finance-list-head">
+                <h3 class="finance-card-title">Income List</h3>
+            </div>
+
+            <div id="incomes-container">
+                @await Html.PartialAsync("_IncomesPartial", Model.Incomes, new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData) { ["EmployeeId"] = empId })
+            </div>
+        </section>
+    </div>
+    }
+</div>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - DMFS</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/DMFS.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/ModuleTheme.css" asp-append-version="true" />
+
+    <!-- Font Awesome Icons (CDN - koi image file ki zaroorat nahi) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+    <div class="app-shell">
+
+        <!-- LEFT SIDEBAR -->
+        <aside class="dmfs-sidebar">
+
+            <div class="dmfs-sidebar-header">
+                <!-- Cow logo icon (Font Awesome) -->
+                <div class="dmfs-logo-icon">
+                    <i class="fa-solid fa-cow"></i>
+                </div>
+                <span class="dmfs-title">DFSM</span>
+            </div>
+
+            <nav class="dmfs-sidebar-nav">
+                <ul>
+                    <li>
+                        <a class="dmfs-link" asp-controller="Cows" asp-action="Manage">
+                            <i class="fa-solid fa-cow dmfs-icon"></i>
+                            <span>Cows</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dmfs-link" asp-controller="MilkProduction" asp-action="Index">
+                            <i class="fa-solid fa-bottle-droplet dmfs-icon"></i>
+                            <span>Milk Production</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dmfs-link" asp-controller="Health" asp-action="Index">
+                            <i class="fa-solid fa-heart-pulse dmfs-icon"></i>
+                            <span>Health</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dmfs-link" asp-controller="Breeding" asp-action="Index">
+                            <i class="fa-solid fa-dna dmfs-icon"></i>
+                            <span>Breeding</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dmfs-link" asp-controller="MilkSales" asp-action="Index">
+                            <i class="fa-solid fa-tags dmfs-icon"></i>
+                            <span>Milk Sales</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dmfs-link" asp-controller="Finance" asp-action="Index">
+                            <i class="fa-solid fa-chart-line dmfs-icon"></i>
+                            <span>Finance</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dmfs-link active" asp-controller="Dashboard" asp-action="Home">
+                            <span class="dmfs-icon"><i class="fa-solid fa-chart-line"></i></span>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dmfs-link" asp-controller="Employees" asp-action="Index">
+                            <span class="dmfs-icon"><i class="fa-solid fa-user-group"></i></span>
+                            <span>Employees</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Bottom cow silhouette -->
+            <div class="dmfs-cow-silhouette">
+                <i class="fa-solid fa-cow"></i>
+            </div>
+
+            <div class="dmfs-sidebar-footer">
+                <button type="button" class="dmfs-power-btn" title="Logout">
+                    <i class="fa-solid fa-power-off"></i>
+                </button>
+            </div>
+
+        </aside>
+
+        <!-- RIGHT CONTENT -->
+        <div class="dmfs-main">
+            <main class="dmfs-main-inner">
+                @RenderBody()
+            </main>
+        </div>
+
+    </div>
+    <div id="modalContainer"></div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/finance-ajax.js" asp-append-version="true"></script>
+    <script src="~/js/pjax.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

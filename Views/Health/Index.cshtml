@@ -1,0 +1,132 @@
+@model DMFS.Models.HealthPageViewModel
+@{
+    ViewData["Title"] = "Health Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="health-root">
+    <h2 class="health-title">Health Report</h2>
+
+    <form asp-action="Save" method="post" data-pjax-submit>
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Draft.RepId" />
+        <section class="health-form-card">
+            <div class="health-grid">
+                <div class="health-field-row">
+                    <label class="health-label" asp-for="Draft.CowId">Cow</label>
+                    <select class="health-input" asp-for="Draft.CowId" asp-items="@(new SelectList(Model.Cows, "CowId", "CowName"))"></select>
+                </div>
+                <div class="health-field-row">
+                    <label class="health-label" asp-for="Draft.CowName"></label>
+                    <input class="health-input" asp-for="Draft.CowName" readonly />
+                </div>
+                <div class="health-field-row">
+                    <label class="health-label" asp-for="Draft.Event"></label>
+                    <input class="health-input" asp-for="Draft.Event" />
+                </div>
+                <div class="health-field-row">
+                    <label class="health-label" asp-for="Draft.Diagnosis"></label>
+                    <input class="health-input" asp-for="Draft.Diagnosis" />
+                </div>
+                <div class="health-field-row">
+                    <label class="health-label" asp-for="Draft.RepDate"></label>
+                    <input class="health-input" asp-for="Draft.RepDate" type="date" />
+                </div>
+                <div class="health-field-row">
+                    <label class="health-label" asp-for="Draft.Treatment"></label>
+                    <input class="health-input" asp-for="Draft.Treatment" />
+                </div>
+                <div class="health-field-row">
+                    <label class="health-label" asp-for="Draft.Cost"></label>
+                    <input class="health-input" asp-for="Draft.Cost" type="number" step="0.01" min="0" />
+                </div>
+                <div class="health-field-row">
+                    <label class="health-label" asp-for="Draft.VetName"></label>
+                    <input class="health-input" asp-for="Draft.VetName" />
+                </div>
+            </div>
+        </section>
+        <div class="health-actions">
+            <button type="submit" class="health-btn health-btn-save">Save</button>
+            <a class="health-btn health-btn-clear" asp-action="Index">Clear</a>
+        </div>
+    </form>
+
+    <div class="health-filter-row">
+        <label class="health-filter-label">Filter</label>
+        <input class="health-input health-filter-input" type="text" placeholder="Search..." id="healthFilter" />
+        <h3 class="health-subtitle">Health Report</h3>
+    </div>
+
+    <div class="health-table-wrap">
+        <table class="health-table" id="healthTable">
+            <thead>
+                <tr>
+                    <th>RepId</th>
+                    <th>CowId</th>
+                    <th>CowName</th>
+                    <th>RepDate</th>
+                    <th>Event</th>
+                    <th>Diagnosis</th>
+                    <th>Treatment</th>
+                    <th>Cost</th>
+                    <th>VetName</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Reports != null && Model.Reports.Any())
+                {
+                    foreach (var item in Model.Reports)
+                    {
+                        <tr>
+                            <td>@item.RepId</td>
+                            <td>@item.CowId</td>
+                            <td>@item.CowName</td>
+                            <td>@item.RepDate.ToString("yyyy-MM-dd")</td>
+                            <td>@item.Event</td>
+                            <td>@item.Diagnosis</td>
+                            <td>@item.Treatment</td>
+                            <td>@item.Cost</td>
+                            <td>@item.VetName</td>
+                            <td>
+                                <a asp-action="Index" asp-route-id="@item.RepId">Edit</a>
+                                <form asp-action="Delete" method="post" class="d-inline" onsubmit="return confirm('Delete?');">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@item.RepId" />
+                                    <button type="submit" class="btn btn-link p-0 text-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="10">No records.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        (function () {
+            var sel = document.querySelector('[name="Draft.CowId"]');
+            var cows = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Cows.Select(c => new { c.CowId, c.CowName })));
+            function syncName() {
+                var id = parseInt(sel.value, 10);
+                var c = cows.find(function (x) { return x.CowId === id; });
+                var nameInput = document.querySelector('[name="Draft.CowName"]');
+                if (c && nameInput) nameInput.value = c.CowName;
+            }
+            sel?.addEventListener('change', syncName);
+            syncName();
+        })();
+        document.getElementById('healthFilter')?.addEventListener('input', function () {
+            const q = this.value.toLowerCase();
+            document.querySelectorAll('#healthTable tbody tr').forEach(function (row) {
+                row.style.display = row.innerText.toLowerCase().includes(q) ? '' : 'none';
+            });
+        });
+    </script>
+}

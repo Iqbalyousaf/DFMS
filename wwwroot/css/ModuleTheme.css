@@ -1,0 +1,362 @@
+
+:root {
+    --dmfs-font-family: Arial, sans-serif;
+    --dmfs-page-padding: 12px 20px 16px;
+    --dmfs-text-color: #fff;
+
+    --dmfs-bg-main: radial-gradient(circle at top, #22384f 0%, #141f2d 56%, #0d1520 100%);
+
+    --dmfs-border-color: rgba(117, 230, 255, 0.4);
+    --dmfs-input-bg: rgba(0, 0, 0, 0.24);
+    --dmfs-card-bg: rgba(0, 0, 0, 0.2);
+    --dmfs-table-bg: rgba(0, 0, 0, 0.48);
+    --dmfs-row-alt-bg: rgba(255, 255, 255, 0.06);
+    --dmfs-head-bg: rgba(255, 255, 255, 0.2);
+
+    --dmfs-title-color: #6ce4ff;
+    --dmfs-subtitle-color: #f067a0;
+
+    --dmfs-btn-save: linear-gradient(135deg, #1fc9af, #0f9684);
+    --dmfs-btn-edit: linear-gradient(135deg, #f3a22b, #d77400);
+    --dmfs-btn-delete: linear-gradient(135deg, #eb4995, #cf2e6f);
+    --dmfs-btn-clear: linear-gradient(135deg, #bcc6cb, #8a949a);
+}
+
+.dmfs-main-inner {
+    padding: 0;
+}
+
+.milk-root,
+.health-root,
+.breed-root,
+.sales-root,
+.finance-root,
+.emp-root {
+    min-height: 100vh;
+    width: 100%;
+    box-sizing: border-box;
+    padding: var(--dmfs-page-padding);
+    color: var(--dmfs-text-color);
+    font-family: var(--dmfs-font-family);
+    background: var(--dmfs-bg-main);
+}
+
+.finance-root {
+    height: auto;
+    min-height: calc(100vh - 24px);
+    overflow: visible;
+    padding-bottom: 24px;
+}
+
+.milk-title,
+.health-title,
+.breed-title,
+.sales-title,
+.finance-title,
+.emp-title {
+    margin: 0 0 14px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--dmfs-title-color);
+    text-shadow: 0 0 10px rgba(108, 228, 255, 0.6);
+}
+
+.milk-form-card,
+.health-form-card,
+.breed-form-card,
+.sales-form-card,
+.emp-card,
+.finance-card {
+    border: 2px solid var(--dmfs-border-color);
+    border-radius: 18px;
+    padding: 16px;
+    background: var(--dmfs-card-bg);
+}
+
+.milk-grid,
+.health-grid,
+.breed-grid,
+.sales-grid,
+.emp-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(150px, 1fr));
+    gap: 1px 12px;
+}
+
+.milk-field-row,
+.health-field-row,
+.breed-field-row,
+.sales-field-row,
+.emp-field-row {
+    display: grid;
+    gap: 1px;
+}
+
+.milk-label,
+.health-label,
+.breed-label,
+.sales-label,
+.emp-label,
+.milk-filter-label,
+.health-filter-label,
+.breed-filter-label {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.milk-input,
+.health-input,
+.breed-input,
+.sales-input,
+.finance-input,
+.emp-input {
+    width: 100%;
+    border: 2px solid var(--dmfs-border-color);
+    background: var(--dmfs-input-bg);
+    color: #fff;
+    border-radius: 12px;
+    padding: 7px 10px;
+    font-size: 14px;
+    outline: none;
+}
+
+.milk-input::placeholder,
+.health-input::placeholder,
+.breed-input::placeholder,
+.sales-input::placeholder,
+.finance-input::placeholder,
+.emp-input::placeholder {
+    color: rgba(255, 255, 255, 0.56);
+}
+
+.milk-actions,
+.health-actions,
+.breed-actions,
+.sales-actions,
+.finance-actions,
+.emp-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 10px 0 12px;
+}
+
+.milk-btn,
+.health-btn,
+.breed-btn,
+.sales-btn,
+.finance-btn,
+.emp-btn {
+    min-width: 80px;
+    padding: 7px 26px;
+    border-radius: 22px;
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.55);
+}
+
+.milk-btn-save,
+.health-btn-save,
+.breed-btn-save,
+.sales-btn-save,
+.finance-btn-save,
+.emp-btn-save { background: var(--dmfs-btn-save); }
+
+.milk-btn-edit,
+.health-btn-edit,
+.breed-btn-edit,
+.sales-btn-edit,
+.finance-btn-edit,
+.emp-btn-edit { background: var(--dmfs-btn-edit); }
+
+.milk-btn-delete,
+.health-btn-delete,
+.breed-btn-delete,
+.sales-btn-delete,
+.finance-btn-delete,
+.emp-btn-delete { background: var(--dmfs-btn-delete); }
+
+.milk-btn-clear,
+.health-btn-clear,
+.breed-btn-clear,
+.sales-btn-clear,
+.finance-btn-clear,
+.emp-btn-clear { background: var(--dmfs-btn-clear); color: #17212b; }
+
+.milk-subtitle,
+.health-subtitle,
+.breed-subtitle,
+.sales-subtitle,
+.emp-subtitle {
+    text-align: center;
+    margin: 16px 0 10px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--dmfs-subtitle-color);
+}
+
+.milk-table-wrap,
+.health-table-wrap,
+.breed-table-wrap,
+.sales-table-wrap,
+.finance-table-wrap,
+.emp-table-wrap {
+    border-radius: 18px;
+    overflow: hidden;
+    background: var(--dmfs-table-bg);
+}
+
+.milk-table,
+.health-table,
+.breed-table,
+.sales-table,
+.finance-table,
+.emp-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.milk-table th,
+.health-table th,
+.breed-table th,
+.sales-table th,
+.finance-table th,
+.emp-table th,
+.milk-table td,
+.health-table td,
+.breed-table td,
+.sales-table td,
+.finance-table td,
+.emp-table td {
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    padding: 6px 10px;
+    text-align: left;
+}
+
+.milk-table thead,
+.health-table thead,
+.breed-table thead,
+.sales-table thead,
+.finance-table thead,
+.emp-table thead {
+    background: var(--dmfs-head-bg);
+    font-weight: 600;
+}
+
+.milk-table tbody tr:nth-child(even),
+.health-table tbody tr:nth-child(even),
+.breed-table tbody tr:nth-child(even),
+.sales-table tbody tr:nth-child(even),
+.finance-table tbody tr:nth-child(even),
+.emp-table tbody tr:nth-child(even) {
+    background: var(--dmfs-row-alt-bg);
+}
+
+.milk-filter-row,
+.health-filter-row,
+.breed-filter-row,
+.finance-filter {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.milk-filter-input,
+.health-filter-input,
+.breed-filter-input {
+    max-width: 320px;
+}
+
+.finance-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 1px;
+}
+
+.finance-emp-box {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.finance-grid {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    gap: 10px;
+    overflow: visible;
+    align-content: start;
+}
+
+.finance-main-card {
+    min-width: 0;
+}
+
+.finance-table-wrap {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.finance-card-title,
+.emp-card-title {
+    margin: 0 0 10px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.finance-form-stack {
+    display: grid;
+    gap: 4px;
+}
+
+.finance-list-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 4px;
+}
+
+.emp-top-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 12px;
+}
+
+.emp-inline-action {
+    margin-top: 12px;
+    display: flex;
+    justify-content: center;
+}
+
+@media (max-width: 1200px) {
+    .milk-grid,
+    .health-grid,
+    .breed-grid,
+    .sales-grid,
+    .emp-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .finance-grid,
+    .emp-top-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 760px) {
+    .milk-grid,
+    .health-grid,
+    .breed-grid,
+    .sales-grid,
+    .emp-grid {
+        grid-template-columns: 1fr;
+    }
+}

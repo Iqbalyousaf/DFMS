@@ -1,0 +1,72 @@
+@model DMFS.Models.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<link rel="stylesheet" href="~/css/dashboard.css" />
+
+<div class="dashboard-root">
+    <h2 class="dashboard-title">DashBoard</h2>
+
+    <div class="dashboard-top-row">
+        <section class="db-card db-card-finance">
+            <h3 class="db-card-heading">Finance</h3>
+
+            <div class="db-card-row">
+                <div class="db-mini-card db-mini-income">
+                    <span class="db-mini-title">Income</span>
+                    <span class="db-mini-value">Rs @Model.TotalIncome.ToString("N0")</span>
+                </div>
+
+                <div class="db-mini-card db-mini-exp">
+                    <span class="db-mini-title">Expenditure</span>
+                    <span class="db-mini-value">Rs @Model.TotalExpenditure.ToString("N0")</span>
+                </div>
+            </div>
+
+            <div class="db-card-row db-card-row-center">
+                <div class="db-mini-card db-mini-balance">
+                    <span class="db-mini-title">Balance</span>
+                    <span class="db-mini-value">Rs @Model.Balance.ToString("N0")</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="db-card db-card-logistic">
+            <h3 class="db-card-heading">Logistic</h3>
+
+            <div class="db-card-row">
+                <div class="db-mini-card db-mini-cows">
+                    <span class="db-mini-title">Cows</span>
+                    <span class="db-mini-value">@Model.CowCount</span>
+                </div>
+
+                <div class="db-mini-card db-mini-milk">
+                    <span class="db-mini-title">Milk Stok in Litters</span>
+                    <span class="db-mini-value">@Model.MilkStockLiters.ToString("N1") Liters</span>
+                </div>
+            </div>
+
+            <div class="db-card-row">
+                <div class="db-mini-card db-mini-employees">
+                    <span class="db-mini-title">Employees</span>
+                    <span class="db-mini-value">@Model.EmployeeCount</span>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="dashboard-bottom-row">
+        <div class="db-bottom-card db-bottom-sale">
+            <span class="db-mini-title">Highest Sale</span>
+            <span class="db-mini-value">Rs @(Model.HighestSaleAmount?.ToString("N0") ?? "—")</span>
+            <span class="db-mini-footer">@(Model.HighestSaleDate?.ToString("yyyy-MM-dd") ?? "—")</span>
+        </div>
+
+        <div class="db-bottom-card db-bottom-exp">
+            <span class="db-mini-title">Highest Expenditure</span>
+            <span class="db-mini-value">Rs @(Model.HighestExpenditureAmount?.ToString("N0") ?? "—")</span>
+            <span class="db-mini-footer">@(Model.HighestExpenditureDate?.ToString("yyyy-MM-dd") ?? "—")</span>
+        </div>
+    </div>
+</div>

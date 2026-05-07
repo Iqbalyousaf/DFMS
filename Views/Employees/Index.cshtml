@@ -1,0 +1,98 @@
+@model DMFS.Models.EmployeePageViewModel
+@{
+    ViewData["Title"] = "Employees";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-warning m-3">@TempData["Error"]</div>
+}
+
+<div class="emp-root">
+    <h2 class="emp-title">Employees</h2>
+
+    <form asp-action="Save" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Draft.EmpId" />
+        <div class="emp-top-grid">
+            <section class="emp-card">
+                <h3 class="emp-card-title">Employee Details</h3>
+                <div class="emp-grid">
+                    <div class="emp-field-row">
+                        <label class="emp-label" asp-for="Draft.EmpName"></label>
+                        <input class="emp-input" asp-for="Draft.EmpName" required />
+                    </div>
+                    <div class="emp-field-row">
+                        <label class="emp-label" asp-for="Draft.EmpDob"></label>
+                        <input class="emp-input" asp-for="Draft.EmpDob" type="date" />
+                    </div>
+                    <div class="emp-field-row">
+                        <label class="emp-label" asp-for="Draft.Gender"></label>
+                        <select class="emp-input" asp-for="Draft.Gender">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="emp-field-row">
+                        <label class="emp-label" asp-for="Draft.Phone"></label>
+                        <input class="emp-input" asp-for="Draft.Phone" />
+                    </div>
+                    <div class="emp-field-row">
+                        <label class="emp-label" asp-for="Draft.Address"></label>
+                        <input class="emp-input" asp-for="Draft.Address" />
+                    </div>
+                    <div class="emp-field-row">
+                        <label class="emp-label" asp-for="Draft.EmpPass"></label>
+                        <input class="emp-input" asp-for="Draft.EmpPass" type="password" />
+                    </div>
+                </div>
+                <div class="emp-inline-action">
+                    <button type="submit" class="emp-btn emp-btn-save">Save</button>
+                    <a class="emp-btn" asp-action="Index">Clear</a>
+                </div>
+            </section>
+        </div>
+    </form>
+
+    <h3 class="emp-subtitle">Employees List</h3>
+
+    <div class="emp-table-wrap">
+        <table class="emp-table">
+            <thead>
+                <tr>
+                    <th>EmpId</th>
+                    <th>EmpName</th>
+                    <th>EmpDob</th>
+                    <th>Gender</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                    <th>EmpPass</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Employees)
+                {
+                    <tr>
+                        <td>@item.EmpId</td>
+                        <td>@item.EmpName</td>
+                        <td>@item.EmpDob.ToString("yyyy-MM-dd")</td>
+                        <td>@item.Gender</td>
+                        <td>@item.Phone</td>
+                        <td>@item.Address</td>
+                        <td>••••</td>
+                        <td>
+                            <a asp-action="Index" asp-route-id="@item.EmpId">Edit</a>
+                            <form asp-action="Delete" method="post" class="d-inline" onsubmit="return confirm('Delete?');">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@item.EmpId" />
+                                <button type="submit" class="btn btn-link p-0 text-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

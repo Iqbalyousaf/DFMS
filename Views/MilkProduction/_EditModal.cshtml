@@ -1,0 +1,128 @@
+@model DMFS.Models.MilkProductionPageViewModel
+<div class="modal fade" id="milkEditModal" tabindex="-1" aria-labelledby="milkEditModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="milkEditModalLabel">Edit Milk Production</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" asp-action="Save" data-pjax-modal novalidate>
+          @Html.AntiForgeryToken()
+          <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+          <input type="hidden" name="Draft.MId" value="@Model.Draft.MId" />
+          <input type="hidden" id="SelectedCowNameModal" name="SelectedCowName" value="" />
+          <input type="hidden" id="SelectedCowEarTagModal" name="SelectedCowEarTag" value="" />
+
+          <div class="row mb-2">
+            <div class="col-md-6">
+              <label class="form-label">Cow</label>
+              <select name="Draft.CowId" id="milkCowSelectModal" class="form-control" required>
+                @foreach(var c in Model.Cows) {
+                  if (c.CowId == Model.Draft.CowId) {
+                    <option value="@c.CowId" data-cow-name="@c.CowName" data-cow-tag="@c.EarTag" selected>@c.CowName (@c.EarTag)</option>
+                  } else {
+                    <option value="@c.CowId" data-cow-name="@c.CowName" data-cow-tag="@c.EarTag">@c.CowName (@c.EarTag)</option>
+                  }
+                }
+              </select>
+              <span class="text-danger">@ViewData.ModelState["Draft.CowId"]?.Errors.FirstOrDefault()?.ErrorMessage</span>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Date</label>
+              <input type="date" name="Draft.DateProd" class="form-control" value="@(Model.Draft.DateProd.ToString("yyyy-MM-dd"))" required />
+              <span class="text-danger">@ViewData.ModelState["Draft.DateProd"]?.Errors.FirstOrDefault()?.ErrorMessage</span>
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-md-4">
+              <label class="form-label">Morning Milk</label>
+              <input type="number" step="any" min="0" name="Draft.AmMilk" class="form-control milk-modal-calc" value="@Model.Draft.AmMilk" required />
+              <span class="text-danger">@ViewData.ModelState["Draft.AmMilk"]?.Errors.FirstOrDefault()?.ErrorMessage</span>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Noon Milk</label>
+              <input type="number" step="any" min="0" name="Draft.NoonMilk" class="form-control milk-modal-calc" value="@Model.Draft.NoonMilk" required />
+              <span class="text-danger">@ViewData.ModelState["Draft.NoonMilk"]?.Errors.FirstOrDefault()?.ErrorMessage</span>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Evening Milk</label>
+              <input type="number" step="any" min="0" name="Draft.PmMilk" class="form-control milk-modal-calc" value="@Model.Draft.PmMilk" required />
+              <span class="text-danger">@ViewData.ModelState["Draft.PmMilk"]?.Errors.FirstOrDefault()?.ErrorMessage</span>
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-md-6">
+              @* Only show status control when editing an existing record. For new records keep status as Draft via hidden input. *@
+              @if (Model.Draft?.MId > 0)
+              {
+                  <label class="form-label">Status</label>
+                  <select name="Draft.Status" class="form-control">
+                    @if (Model.Draft.Status == "Approved")
+                    {
+                      <option value="Draft">Draft</option>
+                      <option value="Approved" selected>Approved</option>
+                    }
+                    else
+                    {
+                      <option value="Draft" selected>Draft</option>
+                      <option value="Approved">Approved</option>
+                    }
+                  </select>
+              }
+              else
+              {
+                  <input type="hidden" name="Draft.Status" value="Draft" />
+              }
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Total Milk</label>
+              <input type="number" class="form-control" id="milkModalTotal" readonly />
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  (function() {
+    function parseVal(v) {
+      var n = parseFloat(v);
+      return Number.isFinite(n) ? n : 0;
+    }
+    function recalc() {
+      var modal = document.getElementById('milkEditModal');
+      if (!modal) return;
+      var am = parseVal(modal.querySelector('input[name="Draft.AmMilk"]')?.value);
+      var noon = parseVal(modal.querySelector('input[name="Draft.NoonMilk"]')?.value);
+      var pm = parseVal(modal.querySelector('input[name="Draft.PmMilk"]')?.value);
+      var t = modal.querySelector('#milkModalTotal');
+      if (t) t.value = (am + noon + pm).toFixed(1);
+    }
+    function syncSelectedCowMetadataModal() {
+      var modal = document.getElementById('milkEditModal');
+      if (!modal) return;
+      var select = modal.querySelector('#milkCowSelectModal');
+      var hiddenName = modal.querySelector('#SelectedCowNameModal');
+      var hiddenTag = modal.querySelector('#SelectedCowEarTagModal');
+      if (!select || !hiddenName || !hiddenTag) return;
+      var opt = select.options[select.selectedIndex];
+      hiddenName.value = opt ? (opt.getAttribute('data-cow-name') || '') : '';
+      hiddenTag.value = opt ? (opt.getAttribute('data-cow-tag') || '') : '';
+    }
+    document.querySelectorAll('#milkEditModal .milk-modal-calc').forEach(function(el) {
+      el.addEventListener('input', recalc);
+    });
+    document.querySelector('#milkEditModal #milkCowSelectModal')?.addEventListener('change', syncSelectedCowMetadataModal);
+    recalc();
+    syncSelectedCowMetadataModal();
+  })();
+</script>

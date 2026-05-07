@@ -1,0 +1,210 @@
+﻿/* wwwroot/css/Layout.css */
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+  
+}
+
+.app-shell {
+    display: flex;
+    height: 100vh; /* Viewport height (100%) */
+    width: 100vw;
+    overflow: hidden; /* Iske andar ka mal-o-mata bahar nahi jayega */
+}
+
+/* ============================================
+   LEFT SIDEBAR
+   ============================================ */
+.dmfs-sidebar {
+    width: 220px;
+    background: #1d1b1a;
+    color: #f5f5f5;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 16px;
+    box-sizing: border-box;
+/*    border-radius: 0 20px 20px 0;*/
+    position: relative;
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.5);
+    /* Leather texture feel - dark gradient */
+    background: radial-gradient(ellipse at top left, #2e2b2a 0%, #1a1817 60%, #111010 100%);
+}
+
+    /* Dashed stitched border on right side */
+    .dmfs-sidebar::after {
+        content: "";
+        position: absolute;
+        top: 10px;
+        bottom: 10px;
+        right: 6px;
+        border-right: 2px dashed #c59a3b;
+        opacity: 0.7;
+    }
+
+/* ---- HEADER ---- */
+.dmfs-sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(197, 154, 59, 0.3);
+}
+
+/* Logo icon circle */
+.dmfs-logo-icon {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, #c59a3b, #a07828);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: #fff;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(197, 154, 59, 0.5);
+}
+
+.dmfs-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #f0e0b0;
+    letter-spacing: 2px;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+
+/* ---- NAV ---- */
+.dmfs-sidebar-nav {
+    flex: 1;
+}
+
+    .dmfs-sidebar-nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .dmfs-sidebar-nav li {
+        margin-bottom: 4px;
+    }
+
+.dmfs-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    color: #d4c9b0;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid transparent;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+    .dmfs-link:hover {
+        background-color: rgba(197, 154, 59, 0.15);
+        color: #f0e0b0;
+        border-color: rgba(197, 154, 59, 0.3);
+        text-decoration: none;
+    }
+
+/* Icon styling - Font Awesome <i> tags */
+.dmfs-icon {
+    width: 20px;
+    text-align: center;
+    font-size: 16px;
+    color: #c59a3b;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.dmfs-link:hover .dmfs-icon {
+    transform: scale(1.2);
+    color: #f0c040;
+}
+
+/* Active link */
+.dmfs-link.active {
+    border: 1px solid #c59a3b;
+    background-color: rgba(197, 154, 59, 0.12);
+    color: #f0e0b0;
+}
+
+    .dmfs-link.active .dmfs-icon {
+        color: #f0c040;
+    }
+
+/* Disabled link */
+.dmfs-link.disabled {
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+/* ---- COW SILHOUETTE (bottom decoration) ---- */
+.dmfs-cow-silhouette {
+    text-align: center;
+    font-size: 64px;
+    color: rgba(197, 154, 59, 0.08);
+    margin: 2px 0;
+    line-height: 1;
+    user-select: none;
+}
+
+/* ---- FOOTER / POWER BUTTON ---- */
+.dmfs-sidebar-footer {
+    margin-top: 0px;
+    text-align: center;
+    padding-top: 8px;
+    border-top: 1px solid rgba(197, 154, 59, 0.2);
+}
+
+.dmfs-power-btn {
+    background: none;
+    border: 2px solid rgba(245, 245, 245, 0.5);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    color: #f5f5f5;
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+    .dmfs-power-btn:hover {
+        border-color: #e53935;
+        color: #e53935;
+        background: rgba(229, 57, 53, 0.15);
+    }
+
+/* ============================================
+   MAIN CONTENT
+   ============================================ */
+.dmfs-main {
+    flex: 1;
+    background-color: #f3f3f3;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    min-width: 0;
+}
+
+.dmfs-main-inner {
+    flex: 1;
+    padding: 20px 30px;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.dmfs-footer {
+    padding: 10px 30px;
+    border-top: 1px solid #ddd;
+    background-color: #ffffff;
+    font-size: 13px;
+}
